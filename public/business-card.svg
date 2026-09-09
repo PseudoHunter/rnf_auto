@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <rect width="1920" height="1080" fill="#04324f" />
+  <g transform="translate(460, 40)">
+    <circle cx="500" cy="500" r="468" fill="none" stroke="#FFFFFF" stroke-width="22" stroke-miterlimit="10" />
+    <circle cx="500" cy="500" r="442" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-miterlimit="10" />
+    
+  <g class="white-shape">
+    <!-- ===== R ===== -->
+    <!-- Top extended horizontal bar and upper bowl -->
+    <path d="M 326 382
+             L 426 382
+             C 482 382 520 412 520 458
+             C 520 504 484 534 424 534
+             L 384 534
+             L 384 517
+             L 424 517
+             C 466 517 496 496 496 458
+             C 496 422 466 399 424 399
+             L 326 399
+             Z" />
+
+    <!-- Standalone circular dot under the horizontal bar -->
+    <circle cx="365" cy="504" r="19" />
+
+    <!-- Dynamic sweeping leg of R -->
+    <path d="M 380 498
+             C 390 514 402 538 412 562
+             C 424 590 438 608 472 610
+             L 476 619
+             L 416 619
+             C 390 612 378 590 368 560
+             C 360 536 352 516 342 502
+             Z" />
+
+    <!-- ===== N ===== -->
+    <!-- Left vertical hairline -->
+    <rect x="475" y="382" width="10" height="237" />
+    <!-- Left top serif -->
+    <polygon points="458,382 485,382 485,391 468,391 458,385" />
+    <!-- Left bottom bilateral serif -->
+    <polygon points="458,610 492,610 492,619 458,619" />
+
+    <!-- Bold diagonal stroke -->
+    <polygon points="475,382 498,382 585,610 585,619 562,619 475,396" />
+
+    <!-- Right vertical hairline -->
+    <rect x="575" y="382" width="10" height="237" />
+    <!-- Right top serif -->
+    <polygon points="575,382 598,382 598,391 585,391 575,391" />
+    <!-- Right bottom bilateral serif -->
+    <polygon points="562,610 598,610 598,619 562,619" />
+
+    <!-- ===== F ===== -->
+    <!-- Vertical bold stem -->
+    <rect x="632" y="382" width="32" height="237" />
+    <!-- Top-left bracketed serif -->
+    <polygon points="616,382 632,382 632,392 622,392 616,386" />
+    <!-- Bottom wide bilateral serif -->
+    <polygon points="614,610 680,610 680,619 614,619" />
+
+    <!-- Top horizontal arm -->
+    <rect x="664" y="382" width="66" height="11" />
+    <!-- Top arm downward beak/serif -->
+    <polygon points="718,382 730,382 730,418 720,418 718,393" />
+
+    <!-- Middle horizontal crossbar -->
+    <rect x="664" y="478" width="44" height="10" />
+    <!-- Middle crossbar terminal beak -->
+    <polygon points="698,478 708,478 708,506 698,506" />
+  </g>
+
+  </g>
+</svg>

@@ -1,0 +1,6 @@
+{
+  "name": "RNF Business Solutions",
+  "description": "High-authority corporate advisory, financial accounting, payroll compliance, and digital growth platform for Malaysian SMEs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

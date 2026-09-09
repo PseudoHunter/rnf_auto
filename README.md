@@ -1,11 +1,45 @@
-<div align="center">
+# RNF Business Solutions
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Official corporate platform for **RNF Business Solutions** — premier corporate advisory, financial accounting, statutory compliance, payroll administration, and digital enablement for Malaysian SMEs.
 
-  <h1>Built with AI Studio</h2>
+---
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## 🚀 Quick Start (Local Development)
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+Ensure you have Node.js 18+ installed.
 
-</div>
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Start development server
+npm run dev
+
+# 3. Build for production
+npm run build
+
+# 4. Preview production build locally
+npm run preview
+```
+
+---
+
+## 🌐 Deploying to Vercel
+
+This repository includes a pre-configured `vercel.json` and is 100% ready for one-click deployment on Vercel:
+
+1. Import this repository into [Vercel](https://vercel.com/new).
+2. The framework preset is automatically detected as **Vite**.
+3. Build Command: `npm run build`
+4. Output Directory: `dist`
+5. Click **Deploy**.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: React 19 + TypeScript
+- **Bundler**: Vite
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Animations**: Motion
