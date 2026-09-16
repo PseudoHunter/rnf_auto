@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { CmsProvider, useCms } from './context/CmsContext';
 import { Navbar } from './components/Navbar';
 import { HomeSectionLayout } from './components/HomeSectionLayout';
@@ -109,6 +110,7 @@ export default function App() {
   return (
     <CmsProvider>
       <MainSiteContent />
+      <Analytics />
     </CmsProvider>
   );
 }
