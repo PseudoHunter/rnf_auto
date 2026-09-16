@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, X, Send, Sparkles, Clock, ShieldCheck } from 'lucide-react';
+import { MessageCircle, X, Send } from 'lucide-react';
 import { useCms } from '../context/CmsContext';
 
 export const StickyWhatsApp: React.FC = () => {
@@ -8,14 +8,15 @@ export const StickyWhatsApp: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const quickPrompts = [
-    "Tanya Pakej Simpan Kira & e-Invois (RM 299/bln)",
-    "Bantu Selesaikan Notis / Tunggakan Cukai LHDN",
-    "Urus Slip Gaji Staf, KWSP, SOCSO & EIS",
-    "Tempah Sesi Konsultasi Percuma Bersama Akauntan",
+    "Inquire Bookkeeping & Accounts Package (RM 600/mo)",
+    "Inquire Staff Payroll Package (RM 200/mo)",
+    "Resolve Backlog Receipts & LHDN e-Invoicing",
+    "Book Complimentary 1-on-1 Advisory Consultation",
   ];
 
   const handleStartChat = (customText?: string) => {
-    const textToSend = customText || `Salam ${companyInfo.name}, saya ingin bertanyakan tentang khidmat akaun & cukai untuk bisnes saya.`;
+    const defaultText = `Hello ${companyInfo.name}, I would like to inquire about your accounting and payroll services for my company.`;
+    const textToSend = customText || defaultText;
     const encoded = encodeURIComponent(textToSend);
     window.open(`https://wa.me/${companyInfo.whatsappNumber}?text=${encoded}`, '_blank');
     setIsOpen(false);
@@ -41,14 +42,14 @@ export const StickyWhatsApp: React.FC = () => {
                 </div>
                 <div className="text-[11px] text-emerald-100 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-200 animate-pulse" />
-                  <span>Online • Isnin–Jumaat (9am–6pm)</span>
+                  <span>Online • Accounting Advisory Team</span>
                 </div>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
               className="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
-              aria-label="Tutup WhatsApp"
+              aria-label="Close WhatsApp"
             >
               <X className="w-5 h-5" />
             </button>
@@ -56,23 +57,23 @@ export const StickyWhatsApp: React.FC = () => {
 
           {/* Body */}
           <div className="p-4 bg-slate-50 space-y-3 text-xs">
-            <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs text-slate-700 leading-relaxed">
-              Salam! 👋 Selamat datang ke <strong>{companyInfo.name}</strong>.
+            <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs text-slate-700 leading-relaxed break-words">
+              Hello! 👋 Welcome to <strong>{companyInfo.name}</strong>.
               <br />
-              Ada sebarang soalan mengenai simpan kira, e-Invois LHDN, atau gaji staf? Pilih topik pantas di bawah atau terus mesej kami:
+              Have inquiries regarding bookkeeping, LHDN e-Invoicing, or corporate payroll? Select a quick topic or message us directly:
             </div>
 
             <div className="space-y-1.5">
               <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                Pertanyaan Pantas:
+                Quick Inquiries:
               </div>
               {quickPrompts.map((prompt, idx) => (
                 <button
                   key={idx}
-                  onClick={() => handleStartChat(`Salam RNF, saya ingin: ${prompt}`)}
+                  onClick={() => handleStartChat(`Hello RNF, I would like to: ${prompt}`)}
                   className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-800 hover:text-emerald-900 transition-colors flex items-center justify-between group cursor-pointer text-xs"
                 >
-                  <span className="font-medium">{prompt}</span>
+                  <span className="font-medium break-words">{prompt}</span>
                   <Send className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 transition-colors shrink-0 ml-2" />
                 </button>
               ))}
@@ -84,9 +85,9 @@ export const StickyWhatsApp: React.FC = () => {
             <span className="text-[11px] text-slate-500 font-mono">{companyInfo.phoneDisplay}</span>
             <button
               onClick={() => handleStartChat()}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer min-h-[38px]"
             >
-              <span>Buka WhatsApp</span>
+              <span>Open WhatsApp</span>
               <Send className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -96,7 +97,7 @@ export const StickyWhatsApp: React.FC = () => {
       {/* Floating Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex items-center gap-2.5 px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-xl hover:shadow-emerald-600/30 transition-all transform hover:scale-105 cursor-pointer border-2 border-white/20"
+        className="group flex items-center gap-2.5 px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-xl hover:shadow-emerald-600/30 transition-all transform hover:scale-105 cursor-pointer border-2 border-white/20 min-h-[44px]"
         aria-label="Direct WhatsApp Advisory"
       >
         <div className="relative flex items-center justify-center">
@@ -104,10 +105,11 @@ export const StickyWhatsApp: React.FC = () => {
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400" />
         </div>
-        <span className="font-bold text-xs sm:text-sm tracking-wide pr-1">
-          WhatsApp Penasihat
+        <span className="font-bold text-xs sm:text-sm tracking-wide pr-1 whitespace-nowrap">
+          WhatsApp Advisor
         </span>
       </button>
     </div>
   );
 };
+

@@ -1,81 +1,85 @@
 import React from 'react';
-import { Quote, Star, CheckCircle } from 'lucide-react';
+import { Star, CheckCircle } from 'lucide-react';
 import { useCms } from '../context/CmsContext';
 
 export const SmeTestimonials: React.FC = () => {
-  const { content } = useCms();
+  const { content, t } = useCms();
   const testimonials = content.testimonials;
+  const testT = t.testimonials;
 
   return (
-    <section id="testimoni" className="py-16 sm:py-20 bg-white border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="testimoni" className="py-12 sm:py-16 lg:py-20 bg-white border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
-            Kisah Kejayaan Pelanggan
+            {testT.badge}
           </span>
-          <h2 className="font-['Outfit'] text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Apa Kata Pemilik Bisnes Yang Menggunakan RNF
+          <h2 className="font-['Outfit'] text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight break-words">
+            {testT.title}
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600">
-            Dari butik fesyen hingga pemilik kafe dan bengkel kereta, mereka kini tidur lena tanpa pening kepala hal akaun.
+          <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm md:text-base text-slate-600 break-words">
+            {testT.subtitle}
           </p>
         </div>
 
-        {/* 3 Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {testimonials.map((item, idx) => (
+        {/* Testimonials Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+          {(testimonials || []).map((item, idx) => (
             <div
-              key={idx}
-              className="bg-slate-50 rounded-2xl p-6 sm:p-7 border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow relative"
+              key={item.id || idx}
+              className="bg-slate-50 rounded-2xl p-5 sm:p-7 border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow relative"
             >
               <div>
-                {/* 5 Stars */}
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                {/* Dynamic Stars */}
+                <div className="flex items-center gap-1 mb-3 sm:mb-4">
+                  {[...Array(item.rating || 5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400 shrink-0" />
                   ))}
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed mb-6">
+                <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed mb-5 sm:mb-6 break-words">
                   "{item.quote}"
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-slate-900 text-sm font-['Outfit']">
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm font-['Outfit'] truncate">
                     {item.name}
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-[11px] sm:text-xs text-slate-500 truncate">
                     {item.role} • <strong className="text-slate-700">{item.business}</strong>
                   </div>
                 </div>
 
-                <span className="text-[11px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md shrink-0">
-                  {item.savings}
-                </span>
+                {item.savings && (
+                  <span className="text-[10px] sm:text-[11px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md shrink-0 whitespace-nowrap">
+                    {item.savings}
+                  </span>
+                )}
               </div>
             </div>
           ))}
         </div>
 
         {/* Micro Trust Proof Bar */}
-        <div className="mt-12 text-center text-xs text-slate-500 flex flex-wrap items-center justify-center gap-6">
-          <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-emerald-600" />
-            100% Pematuhan LHDN & SSM
+        <div className="mt-10 sm:mt-12 text-center text-xs text-slate-600 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          <span className="flex items-center gap-1.5 whitespace-nowrap">
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            {testT.trust1}
           </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-emerald-600" />
-            Tiada Bayaran Tersembunyi
+          <span className="flex items-center gap-1.5 whitespace-nowrap">
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            {testT.trust2}
           </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-emerald-600" />
-            Bebas Tamatkan Langganan Bila-Bila Masa
+          <span className="flex items-center gap-1.5 whitespace-nowrap">
+            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            {testT.trust3}
           </span>
         </div>
       </div>
     </section>
   );
 };
+

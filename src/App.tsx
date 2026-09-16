@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { CmsProvider, useCms } from './context/CmsContext';
 import { Navbar } from './components/Navbar';
-import { HeroSection } from './components/HeroSection';
-import { SmePainPoints } from './components/SmePainPoints';
-import { SmeServices } from './components/SmeServices';
-import { SmeHowItWorks } from './components/SmeHowItWorks';
-import { SmeCostComparison } from './components/SmeCostComparison';
-import { SmeTestimonials } from './components/SmeTestimonials';
-import { PricingSection } from './components/PricingSection';
-import { ConsultationFormSection } from './components/ConsultationFormSection';
+import { HomeSectionLayout } from './components/HomeSectionLayout';
+import { FleetSectionLayout } from './components/FleetSectionLayout';
+import { AboutSectionLayout } from './components/AboutSectionLayout';
 import { Footer } from './components/Footer';
 import { StickyWhatsApp } from './components/StickyWhatsApp';
 import { HealthCheckModal } from './components/HealthCheckModal';
@@ -60,12 +55,12 @@ function MainSiteContent() {
     if (formEl) {
       formEl.scrollIntoView({ behavior: 'smooth' });
     } else {
-      handleOpenHealthCheck(`Berminat dengan pakej ${tierName}`);
+      handleOpenHealthCheck(`Inquiry for ${tierName}`);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#00253c] text-[#f4f6fc] flex flex-col selection:bg-[#003352] selection:text-white">
       {/* 1. Global Navigation */}
       <Navbar
         onOpenHealthCheck={() => handleOpenHealthCheck()}
@@ -73,55 +68,34 @@ function MainSiteContent() {
       />
 
       <main className="flex-grow">
-        {/* 2. Hero Section (with Direct SME Focus & 1-Minute Diagnostic Saringan) */}
-        <HeroSection
-          onOpenHealthCheck={() => handleOpenHealthCheck()}
-          onNavigateToSavings={() => handleNavigateTo('bandingkan-kos')}
+        {/* Section 1: HOME (Matching Home.svg & Home (2).svg) */}
+        <HomeSectionLayout
+          onOpenHealthCheck={handleOpenHealthCheck}
+          onNavigateTo={handleNavigateTo}
         />
 
-        {/* 3. Masalah Utama Pemilik SME (< RM500k Revenue) */}
-        <SmePainPoints
-          onOpenHealthCheck={() => handleOpenHealthCheck('Penyelesaian Masalah Akaun SME')}
-        />
-
-        {/* 4. Servis Jelas & Direct (Simpan Kira, Cukai, Gaji, Penyata Bank) */}
-        <SmeServices
-          onSelectService={(service) => handleOpenHealthCheck(`Pertanyaan Servis: ${service}`)}
-        />
-
-        {/* 5. Cara Kerja 3 Langkah Mudah (Hantar Gambar via WhatsApp) */}
-        <SmeHowItWorks />
-
-        {/* 6. Perbandingan Kos Nyata: Gaji Kerani vs Outsource RNF */}
-        <SmeCostComparison
-          onOpenHealthCheck={() => handleOpenHealthCheck('Pelan Jimat Kos SME')}
-        />
-
-        {/* 7. Pakej Harga Telus & Berpatutan */}
-        <PricingSection
+        {/* Section 2: OUR PACKAGES & SERVICES (Matching Our fleet.svg) */}
+        <FleetSectionLayout
           onSelectTier={handleSelectTier}
-          onOpenHealthCheck={() => handleOpenHealthCheck('Pakej Harga')}
+          onOpenHealthCheck={handleOpenHealthCheck}
         />
 
-        {/* 8. Testimoni Peniaga & Pemilik SME Sebenar */}
-        <SmeTestimonials />
-
-        {/* 9. Borang Tempahan & Sebut Harga Pantas */}
-        <ConsultationFormSection
-          preselectedPackage={selectedPackageForModal}
+        {/* Section 3: ABOUT US (Matching About us.svg) */}
+        <AboutSectionLayout
+          onOpenHealthCheck={handleOpenHealthCheck}
         />
       </main>
 
-      {/* 10. Corporate Footer */}
+      {/* Corporate Footer */}
       <Footer
         onNavigateTo={handleNavigateTo}
         onOpenHealthCheck={() => handleOpenHealthCheck()}
       />
 
-      {/* 11. Sticky WhatsApp Consultation Widget */}
+      {/* Sticky WhatsApp Consultation Widget */}
       <StickyWhatsApp />
 
-      {/* 12. Modal Dialogue for Free 30-Min Financial Health Check */}
+      {/* Modal Dialogue for Free 30-Min Financial Health Check */}
       <HealthCheckModal
         isOpen={isHealthCheckOpen}
         onClose={handleCloseHealthCheck}
