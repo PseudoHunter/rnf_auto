@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Phone, Mail, MapPin, Clock, ArrowUp, Lock } from 'lucide-react';
+import React from 'react';
+import { Phone, Mail, MapPin, Clock, ArrowUp } from 'lucide-react';
 import { useCms } from '../context/CmsContext';
 import { RnfLogo } from './RnfLogo';
 
@@ -9,28 +9,9 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigateTo, onOpenHealthCheck }) => {
-  const { content, navigateTo, t } = useCms();
+  const { content, t } = useCms();
   const { companyInfo } = content;
   const f = t.footer;
-
-  // Secret admin access: tap copyright 5 times in succession
-  const tapCountRef = useRef(0);
-  const tapTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const handleSecretAdminTap = () => {
-    tapCountRef.current += 1;
-    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
-
-    if (tapCountRef.current >= 5) {
-      tapCountRef.current = 0;
-      navigateTo('admin');
-      return;
-    }
-
-    tapTimerRef.current = setTimeout(() => {
-      tapCountRef.current = 0;
-    }, 2500);
-  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -200,9 +181,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTo, onOpenHealthCheck 
         {/* Bottom Statutory & Disclaimer Bar */}
         <div className="pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-[#8fa7c4]">
           <div 
-            onClick={handleSecretAdminTap}
-            className="cursor-default select-none hover:text-white transition-colors text-center md:text-left break-words"
-            title="RNF Business Solutions"
+            className="cursor-default select-none text-center md:text-left break-words"
           >
             {f.rights}
           </div>
@@ -211,14 +190,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTo, onOpenHealthCheck 
             {(f?.complianceBadges || []).map((badge, bIdx) => (
               <span key={bIdx}>{badge}</span>
             ))}
-            <button
-              onClick={() => navigateTo('admin')}
-              className="flex items-center gap-1 text-slate-500 hover:text-emerald-400 transition-colors cursor-pointer py-1"
-              title="Administrator Portal"
-            >
-              <Lock className="w-3 h-3" />
-              <span>{f.adminAccess}</span>
-            </button>
             <button
               onClick={scrollToTop}
               className="flex items-center gap-1 text-[#8fa7c4] hover:text-white transition-colors cursor-pointer py-1"

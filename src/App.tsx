@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CmsProvider, useCms } from './context/CmsContext';
 import { Navbar } from './components/Navbar';
 import { HomeSectionLayout } from './components/HomeSectionLayout';
@@ -10,25 +10,9 @@ import { HealthCheckModal } from './components/HealthCheckModal';
 import { AdminDashboard } from './components/AdminDashboard';
 
 function MainSiteContent() {
-  const { currentRoute, navigateTo } = useCms();
+  const { currentRoute } = useCms();
   const [isHealthCheckOpen, setIsHealthCheckOpen] = useState(false);
   const [selectedPackageForModal, setSelectedPackageForModal] = useState<string | undefined>(undefined);
-
-  // Secret shortcut: Ctrl+Shift+A or Cmd+Shift+A or Alt+A
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-        e.preventDefault();
-        navigateTo('admin');
-      } else if (e.altKey && (e.key === 'a' || e.key === 'A')) {
-        e.preventDefault();
-        navigateTo('admin');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigateTo]);
 
   if (currentRoute === 'admin') {
     return <AdminDashboard />;

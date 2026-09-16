@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Phone, 
   MapPin, 
@@ -7,10 +7,9 @@ import {
   X, 
   ArrowRight, 
   ShieldCheck,
-  Mail,
-  Lock
+  Mail
 } from 'lucide-react';
-import { useCms, AUTHORIZED_ADMIN_EMAIL } from '../context/CmsContext';
+import { useCms } from '../context/CmsContext';
 import { RnfLogo } from './RnfLogo';
 
 interface NavbarProps {
@@ -19,29 +18,12 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenHealthCheck, onNavigateTo }) => {
-  const { content, navigateTo, isAdminLoggedIn, t } = useCms();
+  const { content, t } = useCms();
   const { companyInfo } = content;
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Secret admin access: tap logo 5 times in succession
-  const tapCountRef = useRef(0);
-  const tapTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const handleLogoTap = () => {
-    tapCountRef.current += 1;
-    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
-
-    if (tapCountRef.current >= 5) {
-      tapCountRef.current = 0;
-      navigateTo('admin');
-      return;
-    }
-
-    tapTimerRef.current = setTimeout(() => {
-      tapCountRef.current = 0;
-    }, 2500);
-
+  const handleLogoClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -110,20 +92,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenHealthCheck, onNavigateTo 
               <MessageCircle className="w-3 h-3" />
               <span className="hidden sm:inline">WhatsApp</span>
             </button>
-
-            {/* Discreet Admin Portal Access Link */}
-            <button
-              onClick={() => navigateTo('admin')}
-              title={`Secret Admin Portal (${AUTHORIZED_ADMIN_EMAIL})`}
-              className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
-                isAdminLoggedIn 
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
-                  : 'text-slate-400 hover:text-emerald-300'
-              }`}
-            >
-              <Lock className="w-2.5 h-2.5" />
-              <span className="hidden sm:inline">Admin</span>
-            </button>
           </div>
         </div>
       </div>
@@ -137,9 +105,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenHealthCheck, onNavigateTo 
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4 flex-nowrap">
           {/* Brand Logo & Name - Arranged neatly in one line */}
           <div 
-            onClick={handleLogoTap}
+            onClick={handleLogoClick}
             className="flex items-center gap-2 sm:gap-3 cursor-pointer group shrink-0 select-none whitespace-nowrap min-w-0"
-            title="RNF Business Solutions (Klik 5 kali untuk Admin Portal)"
+            title="RNF Business Solutions"
           >
             <RnfLogo size={36} className="sm:w-[42px] sm:h-[42px] shrink-0" variant="badge" />
 
@@ -231,18 +199,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenHealthCheck, onNavigateTo 
               >
                 <MessageCircle className="w-4 h-4 text-emerald-400" />
                 <span>WhatsApp ({companyInfo.phoneDisplay})</span>
-              </button>
-
-              {/* Secret Admin Portal in Mobile Menu */}
-              <button
-                onClick={() => {
-                  navigateTo('admin');
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full py-2 px-3 text-slate-400 hover:text-emerald-300 text-xs flex items-center justify-center gap-1.5 pt-2"
-              >
-                <Lock className="w-3 h-3" />
-                <span>{t.nav.admin}</span>
               </button>
             </div>
           </div>

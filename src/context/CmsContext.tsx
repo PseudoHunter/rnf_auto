@@ -113,7 +113,9 @@ export interface CmsContent {
 }
 
 export const AUTHORIZED_ADMIN_EMAIL = 'alifhakimi1704@gmail.com';
-export const ADMIN_PIN = 'rnf2026';
+export const ADMIN_USERNAME = 'rnfadminhebat';
+export const ADMIN_PASSWORD = 'rnfnumber1';
+export const ADMIN_PIN = 'rnfnumber1';
 
 const DEFAULT_CONTENT: CmsContent = {
   companyInfo: COMPANY_INFO,
@@ -176,8 +178,8 @@ interface CmsContextType {
   // Admin Auth
   isAdminLoggedIn: boolean;
   currentAdminEmail: string | null;
-  loginAdminWithEmail: (email: string, pin?: string) => { success: boolean; error?: string };
-  loginAdmin: (pin: string) => boolean;
+  loginAdminWithEmail: (usernameOrEmail: string, passwordOrPin?: string) => Promise<{ success: boolean; error?: string }>;
+  loginAdmin: (username: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   logoutAdmin: () => void;
   currentRoute: 'home' | 'admin';
   navigateTo: (route: 'home' | 'admin') => void;
@@ -191,8 +193,8 @@ interface CmsContextType {
 const CmsContext = createContext<CmsContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'rnf_cms_content_v3';
-const AUTH_KEY = 'rnf_admin_auth_v3';
-const AUTH_EMAIL_KEY = 'rnf_admin_email_v3';
+const AUTH_KEY = 'rnf_admin_auth_v4';
+const AUTH_EMAIL_KEY = 'rnf_admin_user_v4';
 const LEADS_STORAGE_KEY = 'rnf_crm_leads_v3';
 const GSHEETS_STORAGE_KEY = 'rnf_gsheets_config_v3';
 const SYNC_LOGS_KEY = 'rnf_sync_logs_v3';
@@ -261,7 +263,7 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     ];
   });
 
-  // 6. Admin Authentication (Restricted to alifhakimi1704@gmail.com)
+  // 6. Admin Authentication (Restricted to username: rnfadminhebat, password: rnfnumber1)
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
     try {
       return localStorage.getItem(AUTH_KEY) === 'true';
@@ -272,43 +274,32 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [currentAdminEmail, setCurrentAdminEmail] = useState<string | null>(() => {
     try {
-      return localStorage.getItem(AUTH_EMAIL_KEY) || (localStorage.getItem(AUTH_KEY) === 'true' ? AUTHORIZED_ADMIN_EMAIL : null);
+      return localStorage.getItem(AUTH_EMAIL_KEY) || (localStorage.getItem(AUTH_KEY) === 'true' ? ADMIN_USERNAME : null);
     } catch {
       return null;
     }
   });
 
-  // 7. Navigation Route
+  // 7. Navigation Route (Direct access via /admin in URL address)
+  const isPathAdmin = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    return (
+      path === '/admin' || 
+      path.startsWith('/admin/') || 
+      hash === '#admin' ||
+      hash.startsWith('#admin')
+    );
+  };
+
   const [currentRoute, setCurrentRoute] = useState<'home' | 'admin'>(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      const search = window.location.search.toLowerCase();
-      if (
-        path === '/admin' || 
-        path.startsWith('/admin') || 
-        hash === '#admin' || 
-        search.includes('admin') ||
-        search.includes('backend')
-      ) {
-        return 'admin';
-      }
-    }
-    return 'home';
+    return isPathAdmin() ? 'admin' : 'home';
   });
 
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      const search = window.location.search.toLowerCase();
-      if (
-        path === '/admin' || 
-        path.startsWith('/admin') || 
-        hash === '#admin' || 
-        search.includes('admin') ||
-        search.includes('backend')
-      ) {
+      if (isPathAdmin()) {
         setCurrentRoute('admin');
       } else {
         setCurrentRoute('home');
@@ -712,38 +703,61 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Auth Functions (Strictly for alifhakimi1704@gmail.com)
-  const loginAdminWithEmail = (email: string, pin?: string): { success: boolean; error?: string } => {
-    const cleanEmail = email.trim().toLowerCase();
-    
-    // Strict email check
-    if (cleanEmail !== AUTHORIZED_ADMIN_EMAIL.toLowerCase()) {
-      return {
-        success: false,
-        error: `Akses Ditolak: Hanya emel rasmi pemilik (${AUTHORIZED_ADMIN_EMAIL}) yang diberi kebenaran mengakses portal rahsia ini.`
-      };
+  // Auth Functions (Strictly username: rnfadminhebat, password: rnfnumber1)
+  const loginAdmin = async (username: string, password?: string): Promise<{ success: boolean; error?: string }> => {
+    const cleanUser = (username || '').trim().toLowerCase();
+    const cleanPass = (password || '').trim();
+
+    // Call backend API verification if reachable
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: cleanUser, password: cleanPass })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setIsAdminLoggedIn(true);
+          setCurrentAdminEmail(ADMIN_USERNAME);
+          try {
+            localStorage.setItem(AUTH_KEY, 'true');
+            localStorage.setItem(AUTH_EMAIL_KEY, ADMIN_USERNAME);
+          } catch {}
+          return { success: true };
+        }
+      } else if (response.status === 401) {
+        return {
+          success: false,
+          error: 'Akses Ditolak: Nama pengguna atau kata laluan pentadbir tidak sah.'
+        };
+      }
+    } catch {
+      // Backend not reached or offline, fallback to secure client credentials check
     }
 
-    // Optional PIN check or direct pass for alifhakimi1704@gmail.com
-    if (pin && pin.trim() !== '' && pin.trim() !== ADMIN_PIN && pin.trim() !== 'admin' && pin.trim() !== 'rnf2026') {
+    const isMatchUser = cleanUser === ADMIN_USERNAME.toLowerCase() || cleanUser === AUTHORIZED_ADMIN_EMAIL.toLowerCase();
+    const isMatchPass = cleanPass === ADMIN_PASSWORD;
+
+    if (!isMatchUser || !isMatchPass) {
       return {
         success: false,
-        error: `PIN Keselamatan tidak sah untuk akaun ${AUTHORIZED_ADMIN_EMAIL}.`
+        error: 'Akses Ditolak: Nama pengguna atau kata laluan pentadbir tidak sah.'
       };
     }
 
     setIsAdminLoggedIn(true);
-    setCurrentAdminEmail(AUTHORIZED_ADMIN_EMAIL);
+    setCurrentAdminEmail(cleanUser === ADMIN_USERNAME.toLowerCase() ? ADMIN_USERNAME : AUTHORIZED_ADMIN_EMAIL);
     try {
       localStorage.setItem(AUTH_KEY, 'true');
-      localStorage.setItem(AUTH_EMAIL_KEY, AUTHORIZED_ADMIN_EMAIL);
+      localStorage.setItem(AUTH_EMAIL_KEY, ADMIN_USERNAME);
     } catch {}
 
     return { success: true };
   };
 
-  const loginAdmin = (pin: string): boolean => {
-    return loginAdminWithEmail(AUTHORIZED_ADMIN_EMAIL, pin).success;
+  const loginAdminWithEmail = async (usernameOrEmail: string, passwordOrPin?: string): Promise<{ success: boolean; error?: string }> => {
+    return loginAdmin(usernameOrEmail, passwordOrPin);
   };
 
   const logoutAdmin = () => {
@@ -752,16 +766,19 @@ export const CmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       localStorage.removeItem(AUTH_KEY);
       localStorage.removeItem(AUTH_EMAIL_KEY);
+      localStorage.removeItem('rnf_admin_auth_v3');
+      localStorage.removeItem('rnf_admin_email_v3');
     } catch {}
+    navigateTo('home');
   };
 
   const navigateTo = (route: 'home' | 'admin') => {
     setCurrentRoute(route);
     if (typeof window !== 'undefined') {
       if (route === 'admin') {
-        window.history.pushState({}, '', '#admin');
+        window.history.pushState({}, '', '/admin');
       } else {
-        window.history.pushState({}, '', window.location.pathname.replace(/\/admin.*$/, '') || '/');
+        window.history.pushState({}, '', '/');
       }
     }
   };
